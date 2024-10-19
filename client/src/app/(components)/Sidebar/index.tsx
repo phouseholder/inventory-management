@@ -4,9 +4,7 @@ import { useAppDispatch, useAppSelector } from "@/app/redux";
 import { setIsSidebarCollapsed } from "@/state";
 import {
   Archive,
-  CircleDollarSign,
   Clipboard,
-  Icon,
   Layout,
   LucideIcon,
   Menu,
@@ -15,6 +13,7 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 interface ISidebarLink {
   href: string;
@@ -77,7 +76,13 @@ const Sidebar = () => {
           isSidebarCollapsed ? "px-5" : "px-8"
         }`}
       >
-        <div>logo</div>
+        <Image
+          src="https://s3-ph-inventorymanagement.s3.us-east-2.amazonaws.com/logo.png"
+          alt="phstock-logo"
+          width={27}
+          height={27}
+          className="rounded w-8"
+        />
         <h1
           className={`font-extrabold text-2xl ${
             isSidebarCollapsed ? "hidden" : "block"
