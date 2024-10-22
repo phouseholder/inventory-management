@@ -2,9 +2,19 @@
 
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import { setIsDarkMode, setIsSidebarCollapsed } from "@/state";
-import { Bell, Menu, Moon, Settings, Sun } from "lucide-react";
+import {
+  Bell,
+  Menu,
+  Moon,
+  PlusCircle,
+  Settings,
+  Sun,
+  TrendingUp,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import { Popover } from "@mui/material";
 
 const Navbar = () => {
   const dispatch = useAppDispatch();
@@ -12,6 +22,7 @@ const Navbar = () => {
     (state) => state.global.isSidebarCollapsed
   );
   const isDarkMode = useAppSelector((state) => state.global.isDarkMode);
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const toggleSidebar = () => {
     dispatch(setIsSidebarCollapsed(!isSidebarCollapsed));
@@ -30,7 +41,7 @@ const Navbar = () => {
         >
           <Menu className="w-4 h-4" />
         </button>
-        <div className="relative">
+        {/* <div className="relative">
           <input
             type="search"
             placeholder="Start type to search groups & products"
@@ -40,7 +51,7 @@ const Navbar = () => {
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <Bell className="text-gray-500" size={20} />
           </div>
-        </div>
+        </div> */}
       </div>
 
       <div className="flex justify-between items-center gap-5">
@@ -55,10 +66,61 @@ const Navbar = () => {
             </button>
           </div>
           <div className="relative">
-            <Bell className="cursor-pointer text-gray-500" size={24} />
-            <span className="absolute -top-2 -right-2 inline-flex items-center justify-center px-[0.4rem] py-1 text-xs font-semibold leading-none text-red-100 bg-red-400 rounded-full">
-              3
-            </span>
+            <button
+              aria-describedby="notifications"
+              onClick={(e) => setAnchorEl(e.currentTarget)}
+            >
+              <Bell className="cursor-pointer text-gray-500" size={24} />
+              <span className="absolute -top-2 -right-2 inline-flex items-center justify-center px-[0.4rem] py-1 text-xs font-semibold leading-none text-red-100 bg-red-400 rounded-full">
+                3
+              </span>
+            </button>
+            <Popover
+              id="notifications"
+              open={Boolean(anchorEl)}
+              onClose={() => setAnchorEl(null)}
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
+              }}
+            >
+              <div className="flex flex-col">
+                <div className="p-5 bg-gray-50">
+                  <div className="flex items-center mb-2">
+                    <PlusCircle className="w-4 h-4 mr-2 text-green-700" />
+                    <h2 className="text-lg font-bold text-gray-700">
+                      New Product Added
+                    </h2>
+                  </div>
+                  <p className="text-gray-500">Product X was just added</p>
+                </div>
+                <hr />
+                <div className="p-5 bg-gray-50">
+                  <div className="flex items-center mb-2">
+                    <PlusCircle className="w-4 h-4 mr-2 text-green-700" />
+                    <h2 className="text-lg font-bold text-gray-700">
+                      New User Joined
+                    </h2>
+                  </div>
+                  <p className="text-gray-500">
+                    John Doe has registered an account
+                  </p>
+                </div>
+                <hr />
+                <div className="p-5 bg-gray-50">
+                  <div className="flex items-center mb-2">
+                    <TrendingUp className="w-4 h-4 mr-2 text-green-700" />
+                    <h2 className="text-lg font-bold text-gray-700">
+                      Monthly Sales Reached
+                    </h2>
+                  </div>
+                  <p className="text-gray-500">
+                    Monthly Sales Quota has been met
+                  </p>
+                </div>
+              </div>
+            </Popover>
           </div>
           <hr className="w-0 h-7 border-solid border-l border-gray-300 mx-3" />
           <div className="flex items-center gap-3 cursor-pointer">

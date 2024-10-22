@@ -68,6 +68,10 @@ const config: Config = {
       },
     },
   },
+  safelist: [
+    'bg-red-500',
+    'hover:bg-red-700',
+  ],
   plugins: [createThemes(themes)],
 };
 export default config;

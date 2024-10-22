@@ -33,6 +33,22 @@ export const api = createApi({
             }),
             invalidatesTags: ["Products"]
         }),
+        updateProduct: build.mutation<void, Product>({
+            query: (product) => ({
+                url: "/products",
+                method: "PUT",
+                body: product
+            }),
+            invalidatesTags: ["Products"]
+        }),
+        deleteProduct: build.mutation<void, Product>({
+            query: (product) => ({
+                url: "/products",
+                method: "DELETE",
+                body: product
+            }),
+            invalidatesTags: ["Products"]
+        }),
         getUsers: build.query<User[], string | void>({
             query: (search) => ({ 
                 url: "/users", 
@@ -47,5 +63,7 @@ export const {
     useGetDashboardMetricsQuery,
     useGetProductsQuery,
     useCreateProductMutation,
+    useUpdateProductMutation,
+    useDeleteProductMutation,
     useGetUsersQuery,
 } = api
