@@ -12,6 +12,7 @@ const Dashboard = () => {
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 xl:overflow-auto gap-10 pb-4 custom-grid-rows">
       {stats.map((stat) => (
         <StatCard
+          key={stat.title}
           title={stat.title}
           primaryIcon={<stat.icon className="text-blue-600 w-6 h-6" />}
           dateRange="Last Updated: 10/10/1995"
