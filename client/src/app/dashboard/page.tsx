@@ -10,6 +10,10 @@ import stats from "./stats";
 const Dashboard = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 xl:overflow-auto gap-10 pb-4 custom-grid-rows">
+      <PopularProducts />
+      <SalesSummary />
+      <ExpenseSummary />
+      <PurchaseSummary />
       {stats.map((stat) => (
         <StatCard
           key={stat.title}
@@ -19,10 +23,6 @@ const Dashboard = () => {
           details={stat.data}
         />
       ))}
-      <PopularProducts />
-      <SalesSummary />
-      <ExpenseSummary />
-      <PurchaseSummary />
     </div>
   );
 };
