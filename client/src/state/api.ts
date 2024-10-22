@@ -56,6 +56,14 @@ export const api = createApi({
             }),
             providesTags: ["Users"]
         }),
+        createUser: build.mutation<User, Omit<User, 'userId'>>({
+            query: (newUser) => ({ 
+                url: "/users", 
+                method: "POST",
+                body: newUser
+            }),
+            invalidatesTags: ["Users"]
+        }),
     })
 })
 
@@ -66,4 +74,5 @@ export const {
     useUpdateProductMutation,
     useDeleteProductMutation,
     useGetUsersQuery,
+    useCreateUserMutation
 } = api

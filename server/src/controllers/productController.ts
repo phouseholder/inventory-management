@@ -15,7 +15,7 @@ export const getProducts = async (req: Request, res: Response): Promise<void> =>
         })
         res.json(products);
     } catch(error) {
-        res.status(500).json({ message: "Error retrieving products" });
+        res.status(500).json(error);
     }
 }
 
@@ -33,7 +33,7 @@ export const createProduct = async (req: Request, res: Response): Promise<void> 
         })
         res.status(201).json(product);
     } catch(error) {
-        res.status(500).json({ message: "Error creating product" });
+        res.status(500).json(error);
     }
 }
 

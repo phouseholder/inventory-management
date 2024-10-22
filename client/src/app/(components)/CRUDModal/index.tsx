@@ -1,24 +1,28 @@
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { Product } from "@/models";
 
-type IProductCRUDModal = {
+type ICRUDModal = {
   data: any;
+  fieldType: "product" | "user";
   isDelete?: boolean;
   isEdit?: boolean;
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (formData: Product) => void;
+  onSubmit: (formData: any) => void;
 };
 
-const ProductCRUDModal = ({
+const CRUDModal = ({
   data,
+  fieldType,
   isDelete = false,
   isEdit = false,
   isOpen,
   onClose,
   onSubmit,
-}: IProductCRUDModal) => {
+}: ICRUDModal) => {
   const [formData, setformData] = useState<any>(data);
+
+  const inputs = fields[fieldType];
 
   //reset the data anytime the modal is reopened
   useEffect(() => setformData(data), [isOpen]);
@@ -92,7 +96,7 @@ const ProductCRUDModal = ({
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-20">
-      <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+      <div className="relative top-20 mx-auto p-5 w-96 shadow-lg rounded-md bg-white">
         <h1 className="text-2xl font-semibold text-gray-700">
           {`${isDelete ? "Delete" : isEdit ? "Edit" : "Create New"} Product`}
         </h1>
@@ -123,11 +127,17 @@ const ProductCRUDModal = ({
   );
 };
 
-const inputs = [
-  { name: "name", type: "text", label: "Product Name" },
-  { name: "price", type: "number", label: "Price" },
-  { name: "stockQuantity", type: "number", label: "Stock Quantity" },
-  { name: "rating", type: "number", label: "Rating" },
-];
+const fields = {
+  product: [
+    { name: "name", type: "text", label: "Product Name" },
+    { name: "price", type: "number", label: "Price" },
+    { name: "stockQuantity", type: "number", label: "Stock Quantity" },
+    { name: "rating", type: "number", label: "Rating" },
+  ],
+  user: [
+    { name: "name", type: "text", label: "Name" },
+    { name: "email", type: "text", label: "Email" },
+  ],
+};
 
-export default ProductCRUDModal;
+export default CRUDModal;

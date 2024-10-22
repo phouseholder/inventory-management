@@ -2,6 +2,9 @@
 
 import { useGetUsersQuery } from "@/state/api";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { useState } from "react";
+import { PageHeader, CRUDModal } from "../(components)";
+import { useUserCRUD } from "./useUserCRUD";
 
 const columns: GridColDef[] = [
   {
@@ -22,7 +25,11 @@ const columns: GridColDef[] = [
 ];
 
 const Users = () => {
-  const { data: users, isError, isLoading } = useGetUsersQuery();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+
+  const { data: users, isError, isLoading } = useGetUsersQuery(searchTerm);
+  const { newUser, handleCreateUser } = useUserCRUD();
 
   if (isLoading) {
     return <div className="py-4">Loading...</div>;
@@ -36,13 +43,29 @@ const Users = () => {
 
   return (
     <div className="flex flex-col w-full">
-      <h1 className="text-2xl font-semibold text-gray-700">Users</h1>
+      <PageHeader
+        title="Users"
+        createText="Create User"
+        createOnClick={() => setIsCreateOpen(true)}
+        searchPlaceholder="Search users..."
+        searchTerm={searchTerm}
+        searchOnChange={(e) => setSearchTerm(e.target.value)}
+      />
+
       <DataGrid
         rows={users}
         columns={columns}
         getRowId={(row) => row.userId}
         checkboxSelection
         className="bg-white shadow rounded-lg border border-gray-200 mt-5 !text-gray-700"
+      />
+
+      <CRUDModal
+        onClose={() => setIsCreateOpen(false)}
+        onSubmit={handleCreateUser}
+        isOpen={isCreateOpen}
+        data={newUser}
+        fieldType="user"
       />
     </div>
   );

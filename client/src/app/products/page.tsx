@@ -1,18 +1,12 @@
 "use client";
 
-import {
-  useCreateProductMutation,
-  useDeleteProductMutation,
-  useGetProductsQuery,
-  useUpdateProductMutation,
-} from "@/state/api";
-import { Pencil, PlusCircle, SearchIcon, Trash } from "lucide-react";
+import { useGetProductsQuery } from "@/state/api";
+import { Pencil, Trash } from "lucide-react";
 import { useState } from "react";
-import { Rating } from "../(components)";
-import ProductCRUDModal from "./ProductCRUDModal";
+import { PageHeader, Rating, CRUDModal } from "../(components)";
 import { Product } from "@/models";
 import Image from "next/image";
-import { v4 } from "uuid";
+import { useProductCRUD } from "./useProductCRUD";
 
 const Products = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -21,24 +15,18 @@ const Products = () => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [productEdit, setProductEdit] = useState<Product>();
   const [productDelete, setProductDelete] = useState<Product>();
+  const {
+    newProduct,
+    handleCreateProduct,
+    handleDeleteProduct,
+    handleUpdateProduct,
+  } = useProductCRUD();
 
   const {
     data: products,
     isLoading,
     isError,
   } = useGetProductsQuery(searchTerm);
-
-  const newProduct: Product = {
-    productId: v4(),
-    name: "",
-    price: 0,
-    stockQuantity: 0,
-    rating: 0,
-  };
-
-  const [createProduct] = useCreateProductMutation();
-  const [updateProduct] = useUpdateProductMutation();
-  const [deleteProduct] = useDeleteProductMutation();
 
   const handleEditOpen = (product: Product) => {
     setProductEdit(product);
@@ -48,20 +36,6 @@ const Products = () => {
   const handleDeleteOpen = (product: Product) => {
     setProductDelete(product);
     setIsDeleteOpen(true);
-  };
-
-  const handleDeleteProduct = async (productData: Product) => {
-    await deleteProduct(productData);
-  };
-
-  const handleUpdateProduct = async (productData: Product) => {
-    await updateProduct(productData);
-  };
-
-  const handleCreateProduct = async (
-    productData: Omit<Product, "productId">
-  ) => {
-    await createProduct(productData);
   };
 
   if (isLoading) {
@@ -78,28 +52,14 @@ const Products = () => {
 
   return (
     <div className="mx-auto pb-5 w-full">
-      <div className="mb-6">
-        <div className="flex items-center border-2 border-gray-200 rounded">
-          <SearchIcon className="w-5 h-5 text-gray-500 m-2" />
-          <input
-            className="w-full py-2 px-4 rounded bg-white"
-            placeholder="Search products..."
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-      </div>
-
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-semibold text-gray-700">Products</h1>
-        <button
-          className="flex items-center bg-blue-500 hover:bg-blue-700 text-gray-200 font-bold py-2 px-4 rounded"
-          onClick={() => setIsCreateOpen(true)}
-        >
-          <PlusCircle className="w-5 h-5 mr-2 !text-gray-200" /> Create Product
-        </button>
-      </div>
+      <PageHeader
+        title="Products"
+        createText="Create Product"
+        createOnClick={() => setIsCreateOpen(true)}
+        searchPlaceholder="Search products..."
+        searchTerm={searchTerm}
+        searchOnChange={(e) => setSearchTerm(e.target.value)}
+      />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 justify-between">
         {isLoading ? (
@@ -150,29 +110,32 @@ const Products = () => {
         )}
       </div>
 
-      <ProductCRUDModal
+      <CRUDModal
         onClose={() => setIsCreateOpen(false)}
         onSubmit={handleCreateProduct}
         isOpen={isCreateOpen}
         data={newProduct}
+        fieldType="product"
       />
 
       {productEdit && (
-        <ProductCRUDModal
+        <CRUDModal
           onClose={() => setIsEditOpen(false)}
           onSubmit={handleUpdateProduct}
           isOpen={isEditOpen}
           data={productEdit}
+          fieldType="product"
           isEdit
         />
       )}
 
       {productDelete && (
-        <ProductCRUDModal
+        <CRUDModal
           data={productDelete}
           onClose={() => setIsDeleteOpen(false)}
           onSubmit={handleDeleteProduct}
           isOpen={isDeleteOpen}
+          fieldType="product"
           isDelete
         />
       )}
